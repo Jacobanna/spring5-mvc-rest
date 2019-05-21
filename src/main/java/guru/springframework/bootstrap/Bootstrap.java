@@ -1,7 +1,7 @@
-package guru.springfamework.bootstrap;
+package guru.springframework.bootstrap;
 
-import guru.springfamework.domain.Category;
-import guru.springfamework.repositories.CategoryRepository;
+import guru.springframework.domain.Category;
+import guru.springframework.repository.CategoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
