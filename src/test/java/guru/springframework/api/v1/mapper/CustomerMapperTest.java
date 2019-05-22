@@ -11,7 +11,6 @@ public class CustomerMapperTest {
 
     public static final String FIRSTNAME = "John";
     public static final String LASTNAME = "Wick";
-    public static final String CUSTOMER_URL = "shop/customers/1";
 
     CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
@@ -22,7 +21,6 @@ public class CustomerMapperTest {
         Customer customer = new Customer();
         customer.setFirstname(FIRSTNAME);
         customer.setLastname(LASTNAME);
-        customer.setCustomerUrl(CUSTOMER_URL);
 
         //When
         CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
@@ -30,6 +28,5 @@ public class CustomerMapperTest {
         //Then
         assertEquals(FIRSTNAME, customerDTO.getFirstname());
         assertEquals(LASTNAME, customerDTO.getLastname());
-        assertEquals(CUSTOMER_URL, customerDTO.getCustomerUrl());
     }
 }

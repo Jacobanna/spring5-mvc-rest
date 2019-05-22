@@ -10,15 +10,10 @@ import javax.persistence.Id;
 @Data
 @Entity
 public class Customer {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String firstname;
     private String lastname;
-    private String customerUrl;
-
-    public void setCustomerUrl(String customerUrl) {
-        this.customerUrl = "/shop/customers/" + id;
-    }
 }

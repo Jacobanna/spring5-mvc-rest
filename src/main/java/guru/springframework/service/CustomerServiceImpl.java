@@ -21,14 +21,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> getAllCustomers() {
-        return customerRepository.findAll()
+        return customerRepository
+                .findAll()
                 .stream()
-                .map(customerMapper::customerToCustomerDto)
+                .map(customer -> {
+                    CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
+                    customerDTO.setCustomerUrl("/api/v1/customer/" + customer.getId());
+                    return customerDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CustomerDTO getCustomerById(long id) {
-        return customerMapper.customerToCustomerDto(customerRepository.findById(id));
+    public CustomerDTO getCustomerById(Long id) {
+        return customerRepository.findById(id)
+                .map(customerMapper::customerToCustomerDto)
+                .orElseThrow(RuntimeException::new); // todo implement better exception handling
     }
 }

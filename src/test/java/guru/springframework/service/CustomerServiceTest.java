@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class CustomerServiceTest {
@@ -34,7 +35,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void getAllCustomers() {
+    public void getAllCustomers() throws Exception {
         //Given
         List<Customer> customers = Arrays.asList(new Customer(), new Customer(), new Customer());
         when(customerRepository.findAll()).thenReturn(customers);
@@ -47,13 +48,13 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void getCustomerById() {
+    public void getCustomerById() throws Exception {
         //Given
         Customer customer = new Customer();
         customer.setId(ID);
         customer.setFirstname(FIRSTNAME);
         customer.setLastname(LASTNAME);
-        when(customerRepository.findById(ID)).thenReturn(customer);
+        when(customerRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(customer));
         //When
         CustomerDTO customerDTO = customerService.getCustomerById(ID);
         //Then
