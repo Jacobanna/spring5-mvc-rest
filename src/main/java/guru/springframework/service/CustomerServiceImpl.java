@@ -2,6 +2,7 @@ package guru.springframework.service;
 
 import guru.springframework.api.v1.mapper.CustomerMapper;
 import guru.springframework.api.v1.model.CustomerDTO;
+import guru.springframework.domain.Customer;
 import guru.springframework.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,14 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id)
                 .map(customerMapper::customerToCustomerDto)
                 .orElseThrow(RuntimeException::new); // todo implement better exception handling
+    }
+
+    @Override
+    public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+        Customer customer = customerMapper.customerDtoToCustomer(customerDTO);
+        Customer savedCustomer = customerRepository.save(customer);
+        CustomerDTO returnCustomerDto = customerMapper.customerToCustomerDto(savedCustomer);
+        returnCustomerDto.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
+        return returnCustomerDto;
     }
 }

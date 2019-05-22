@@ -14,12 +14,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static guru.springframework.controller.v1.AbstractRestControllerTest.asJsonString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,5 +80,28 @@ public class CustomerControllerTest {
         mockMvc.perform(get("/api/v1/customers/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo("Adam")));
+    }
+
+    @Test
+    public void createNewCustomer() throws Exception {
+        //given
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstname("Fred");
+        customerDTO.setLastname("Flintstone");
+
+        CustomerDTO returnConsumerDTO = new CustomerDTO();
+        returnConsumerDTO.setFirstname(customerDTO.getFirstname());
+        returnConsumerDTO.setLastname(customerDTO.getLastname());
+        returnConsumerDTO.setCustomerUrl("/api/v1/customers/1");
+
+        when(customerService.createNewCustomer(customerDTO)).thenReturn(returnConsumerDTO);
+
+        //when&then
+        mockMvc.perform(post("/api/v1/customers/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstname", equalTo("Fred")))
+                .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/1")));
     }
 }
