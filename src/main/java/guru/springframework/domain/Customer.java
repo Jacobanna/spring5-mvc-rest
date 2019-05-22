@@ -17,4 +17,8 @@ public class Customer {
     private String firstname;
     private String lastname;
     private String customerUrl;
+
+    public void setCustomerUrl(String customerUrl) {
+        this.customerUrl = "/shop/customers/" + id;
+    }
 }
