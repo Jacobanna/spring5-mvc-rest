@@ -76,7 +76,12 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setLastname(customerDTO.getLastname());
             }
 
-            return customerMapper.customerToCustomerDto(customerRepository.save(customer));
+            CustomerDTO returnCustomerDto = customerMapper.customerToCustomerDto(customerRepository.save(customer));
+
+            returnCustomerDto.setCustomerUrl("/api/v1/customer/" + id);
+
+            return returnCustomerDto;
+
         }).orElseThrow(RuntimeException::new); //todo implement better exception handling;
     }
 }
