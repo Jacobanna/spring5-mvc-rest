@@ -2,6 +2,7 @@ package guru.springframework.service;
 
 import guru.springframework.api.v1.mapper.CustomerMapper;
 import guru.springframework.api.v1.model.CustomerDTO;
+import guru.springframework.controller.v1.CustomerController;
 import guru.springframework.domain.Customer;
 import guru.springframework.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(customer -> {
                     CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
-                    customerDTO.setCustomerUrl("/api/v1/customer/" + customer.getId());
+                    customerDTO.setCustomerUrl(getCustomerUrl(customer.getId()));
                     return customerDTO;
                 })
                 .collect(Collectors.toList());
@@ -37,6 +38,10 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO getCustomerById(Long id) {
         return customerRepository.findById(id)
                 .map(customerMapper::customerToCustomerDto)
+                .map(customerDTO -> {
+                    customerDTO.setCustomerUrl(getCustomerUrl(id));
+                    return customerDTO;
+                })
                 .orElseThrow(RuntimeException::new); // todo implement better exception handling
     }
 
@@ -51,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerDTO returnDto = customerMapper.customerToCustomerDto(savedCustomer);
 
-        returnDto.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
+        returnDto.setCustomerUrl(getCustomerUrl(savedCustomer.getId()));
 
         return returnDto;
     }
@@ -78,10 +83,19 @@ public class CustomerServiceImpl implements CustomerService {
 
             CustomerDTO returnCustomerDto = customerMapper.customerToCustomerDto(customerRepository.save(customer));
 
-            returnCustomerDto.setCustomerUrl("/api/v1/customer/" + id);
+            returnCustomerDto.setCustomerUrl(getCustomerUrl(id));
 
             return returnCustomerDto;
 
         }).orElseThrow(RuntimeException::new); //todo implement better exception handling;
+    }
+
+    @Override
+    public void deleteCustomerById(Long id) {
+        customerRepository.deleteById(id);
+    }
+
+    private String getCustomerUrl(Long id) {
+        return CustomerController.BASE_URL + "/" + id;
     }
 }
