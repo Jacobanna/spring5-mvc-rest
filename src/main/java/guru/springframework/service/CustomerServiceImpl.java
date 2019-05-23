@@ -2,6 +2,7 @@ package guru.springframework.service;
 
 import guru.springframework.api.v1.mapper.CustomerMapper;
 import guru.springframework.api.v1.model.CustomerDTO;
+import guru.springframework.controller.RestResponseEntityExceptionHandler;
 import guru.springframework.controller.v1.CustomerController;
 import guru.springframework.domain.Customer;
 import guru.springframework.repository.CustomerRepository;
@@ -42,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDTO.setCustomerUrl(getCustomerUrl(id));
                     return customerDTO;
                 })
-                .orElseThrow(RuntimeException::new); // todo implement better exception handling
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
